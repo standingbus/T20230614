@@ -32,6 +32,30 @@ public class UserDao {
 		}
 	}
 
+	// login check. id & pass => 로그인정상.
+	public boolean login(String id, String pw) {
+		sql = "select * from tbl_users where user_id = ? and user_pw =?";
+		conn = Dao.getConnect();
+
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, id);
+			psmt.setString(2, pw);
+
+			rs = psmt.executeQuery();
+
+			if (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return false;
+
+	}
+
 	public UserVO search(String userId) {
 		sql = "select * from tbl_users where user_id = ? ";
 		conn = Dao.getConnect();
@@ -148,7 +172,7 @@ public class UserDao {
 			String sql = "delete tbl_users" + "	where 	user_id = ? ";
 			conn = Dao.getConnect();
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, user.getUserId() );
+			psmt.setString(1, user.getUserId());
 
 			int r = psmt.executeUpdate();
 
@@ -170,6 +194,5 @@ public class UserDao {
 		}
 		return false;
 	}
-
 
 }
